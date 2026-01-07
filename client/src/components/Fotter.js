@@ -108,7 +108,7 @@ const Fotter = () => {
           <Link to="/termCondition">Terms</Link>
           <Link to="/userContent">User Content Terms</Link>
         </div>
-        <p>© 2025 Āarogyām Rahita. All rights reserved.</p>
+        <p>© 2026 Vishwakarma Agriculture. All rights reserved.</p>
       </motion.div>
     </footer>
   );

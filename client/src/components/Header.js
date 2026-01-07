@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import styles from "../css/Header.module.css";
-import logoImage from "../images/arogyamlogo.png";
+import logoImage from "../images/Vishwakarma_logo.png";
 import { GiShoppingCart } from "react-icons/gi";
 import { IoSearch } from "react-icons/io5";
 import { MdAccountCircle } from "react-icons/md";
