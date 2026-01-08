@@ -10,7 +10,8 @@ const {
     getProfile,
     updateProfile,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    verifyEmail
 } = require("../controllers/auth.controller");
 const {
     validateRegister,
@@ -21,6 +22,7 @@ const { verifyToken } = require("../middlewares/auth.middleware");
 router.post("/register", validateRegister, register);
 router.post("/login", validateLogin, login);
 router.post("/verify-otp", verifyOtp);
+router.get("/verify-email", verifyEmail);
 router.post("/resend-otp", resendOtp);
 router.post("/refresh-token", refreshToken);
 router.post("/logout", verifyToken, logout);

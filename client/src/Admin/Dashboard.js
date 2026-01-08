@@ -57,25 +57,15 @@ const Dashboard = () => {
     });
 
     const categories = [
-        "general",
-        "health",
-        "wellness",
-        "supplements",
-        "herbs",
-        "other",
-        "oils",
-        "seeds",
-        "aata",
-        "pickle",
-        "dal",
-        "dry fruits",
-        "millets",
-        "sabut masala",
-        "masala",
-        "Special Churan",
-        "rice",
-        "tea",
-        "fast(varat)",
+        "Karni(Hand Hoe)",
+        "Majhola(Pickaxe)",
+        "Fawda(Spade)",
+        "Hathoda(Hammer)",
+        "Chhuri(Knife)",
+        "Aari(Sickle)",
+        "Other Agricultural Tools(Other Farming Tools)"
+
+
     ];
 
     useEffect(() => {

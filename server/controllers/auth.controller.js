@@ -107,13 +107,16 @@ exports.register = async (req, res) => {
                 .json({ message: "User with this email already exists" });
         }
 
+        const verificationToken = crypto.randomBytes(20).toString("hex");
+
         const user = new User({
             name: name.trim(),
             email: email.toLowerCase().trim(),
             number: number ? String(number).trim() : "",
             password,
-            isVerified: true,
+            isVerified: false,
             isActive: true,
+            verificationToken,
         });
 
         if (user.email === "yugaldhiman14@gmail.com") {
@@ -122,8 +125,25 @@ exports.register = async (req, res) => {
 
         await user.save();
 
+        const origin = req.headers && req.headers.origin ? req.headers.origin : FRONTEND_URL;
+        const verificationUrl = `${origin}/verify-email?token=${verificationToken}`;
+
+        const emailHtml = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">
+            <p>Dear ${user.name || "User"},</p>
+            <p>Thank you for registering. Please click the link below to verify your email address:</p>
+            <p><a href="${verificationUrl}">Verify Your Email</a></p>
+            <p>If you did not create an account, please ignore this email.</p>
+            <p>— Vishwakarma Agriculture</p>
+        </div>`;
+
+        try {
+            await sendEmail(user.email, "Verify Your Email Address", emailHtml);
+        } catch (e) {
+            console.warn("Failed to send verification email:", e.message || e);
+        }
+
         res.status(201).json({
-            message: "Account created successfully! You can now log in.",
+            message: "Account created successfully! A verification email has been sent to your email address.",
             email: user.email,
         });
     } catch (error) {
@@ -153,6 +173,10 @@ exports.login = async (req, res) => {
 
         if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        if (!user.isVerified) {
+            return res.status(401).json({ message: "Please verify your email address before logging in." });
         }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -363,6 +387,32 @@ exports.logout = async (req, res) => {
         res.status(500).json({ message: "Server error during logout" });
     }
 };
+
+exports.verifyEmail = async (req, res) => {
+    const { token } = req.query;
+
+    if (!token) {
+        return res.status(400).json({ message: "Verification token is required" });
+    }
+
+    try {
+        const user = await User.findOne({ verificationToken: token });
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid verification token" });
+        }
+
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        await user.save();
+
+        res.status(200).json({ message: "Email verified successfully. You can now log in." });
+    } catch (error) {
+        console.error("Email Verification Error:", error);
+        res.status(500).json({ message: "Server error during email verification" });
+    }
+};
+
 
 exports.getProfile = async (req, res) => {
     try {
